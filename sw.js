@@ -57,4 +57,12 @@ self.addEventListener("fetch", (event) => {
   // chỉ handle GET
   if (req.method !== "GET") return;
 
-  // Network-first cho data &
+  // Network-first cho data & code để khỏi bị kẹt bản cũ
+  if (url.pathname.endsWith("/app.js") || url.pathname.endsWith("/vocab.csv")) {
+    event.respondWith(networkFirst(req));
+    return;
+  }
+
+  // Với các file còn lại: vừa nhanh vừa tự update
+  event.respondWith(staleWhileRevalidate(req));
+});
