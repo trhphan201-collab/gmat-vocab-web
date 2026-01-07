@@ -943,20 +943,18 @@ loadVocabCSV().catch(err => {
 
 function setVocabPack(lang){
   currentLang = lang;
-
-  document.getElementById("btnENVI")?.classList.toggle("active", lang === "en_vi");
-  document.getElementById("btnENKO")?.classList.toggle("active", lang === "en_ko");
-  document.getElementById("btnENZH")?.classList.toggle("active", lang === "en_zh");
-
   localStorage.setItem("gmat_vocab_pack", lang);
   loadVocabCSV();
 }
 
-const savedPack = localStorage.getItem("gmat_vocab_pack");
-if (savedPack) currentLang = savedPack;
+// init dropdown
+const packSelect = document.getElementById("vocabPack");
+if (packSelect) {
+  const saved = localStorage.getItem("gmat_vocab_pack");
+  if (saved) currentLang = saved;
 
-document.getElementById("btnENVI")?.addEventListener("click", () => setVocabPack("en_vi"));
-document.getElementById("btnENKO")?.addEventListener("click", () => setVocabPack("en_ko"));
-document.getElementById("btnENZH")?.addEventListener("click", () => setVocabPack("en_zh"));
-
-setVocabPack(currentLang); // ensures active UI on load
+  packSelect.value = currentLang || "en_vi";  // default
+  packSelect.addEventListener("change", (e) => {
+    setVocabPack(e.target.value);
+  });
+}

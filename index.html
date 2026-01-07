@@ -61,11 +61,15 @@
 
   <div class="row">
     <div class="backup">
-      <div class="lang-switch">
-        <button id="btnENVI" class="pill langPill">EN–VI</button>
-        <button id="btnENKO" class="pill langPill">EN–KO</button>
-        <button id="btnENZH" class="pill langPill">EN–ZH</button>
-      </div>
+      <div class="pack-switch">
+  <span class="pack-label">Vocab pack</span>
+  <select id="vocabPack" class="pill-select" aria-label="Select vocab pack">
+    <option value="en_vi">EN–VI</option>
+    <option value="en_ko">EN–KO</option>
+    <option value="en_zh">EN–ZH</option>
+  </select>
+</div>
+
       
       <button class="pill" onclick="exportProgress()">Export progress</button>
       <button class="pill" onclick="triggerImport()">Import progress</button>

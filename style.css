@@ -753,24 +753,62 @@ body:not([data-theme="dark"]) .mode{
   opacity: 0.85;
 }
 
-/* Language pack switch - match pill system */
-.lang-switch{
+.pack-switch{
   display: inline-flex;
-  gap: 8px;
-  padding: 6px;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
   border-radius: 999px;
   border: 1px solid rgba(15,23,42,0.10);
   background: rgba(255,255,255,0.55);
   backdrop-filter: blur(6px);
 }
 
-.langPill{
-  padding: 8px 12px;
+.pack-label{
   font-size: 12px;
+  opacity: 0.8;
+  white-space: nowrap;
 }
 
-/* Dark mode */
-body[data-theme="dark"] .lang-switch{
+.pill-select{
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  border: 0;
+  outline: none;
+  border-radius: 999px;
+
+  padding: 8px 34px 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+
+  background: rgba(255,255,255,0.85);
+  cursor: pointer;
+  position: relative;
+
+  /* arrow */
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(15,23,42,0.65) 50%),
+    linear-gradient(135deg, rgba(15,23,42,0.65) 50%, transparent 50%);
+  background-position:
+    calc(100% - 16px) 50%,
+    calc(100% - 11px) 50%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+/* dark theme */
+body[data-theme="dark"] .pack-switch{
   border-color: rgba(255,255,255,0.16);
   background: rgba(255,255,255,0.05);
+}
+
+body[data-theme="dark"] .pill-select{
+  background-color: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.92);
+
+  background-image:
+    linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.75) 50%),
+    linear-gradient(135deg, rgba(255,255,255,0.75) 50%, transparent 50%);
 }
