@@ -10,7 +10,7 @@ const STORAGE_KEY = "gmat_vocab_progress_v3";
 const SETTINGS_KEY = "gmat_vocab_settings_v3";
 const DAILY_KEY = "gmat_vocab_daily_v3";
 
-let vocab = [];        // [{en, vi}]
+let vocab = [];        // [{id, en, target}]
 let progress = {};     // { [en]: {box, streak, correct, wrong, lastSeen, nextDue} }
 let settings = {
   dailyGoal: 30,
@@ -27,6 +27,16 @@ const VOCAB_FILES = {
   en_ko: "data/gmat_en_ko.csv",
   en_zh: "data/gmat_en_zh.csv",
 }; 
+
+const LANG_META = {
+  en_vi: { left: "EN", right: "VI" },
+  en_ko: { left: "EN", right: "KO" },
+  en_zh: { left: "EN", right: "ZH" },
+};
+
+function currentPair() {
+  return LANG_META[currentLang] || LANG_META.en_vi;
+}
 
 let order = [];         // indices for normal study
 let currentIdx = null;  // index in vocab
@@ -331,22 +341,20 @@ function setPromptState() {
 
   currentDirection = pickDirectionForCard();
 
-  if (currentDirection === "en_vi") {
-    currentPromptText = card.en;
-    currentCorrectText = card.vi;
-  } else {
-    currentPromptText = card.vi;
-    currentCorrectText = card.en;
-  }
+  const pair = currentPair();
+const leftToRight = `${pair.left} → ${pair.right}`;
+const rightToLeft = `${pair.right} → ${pair.left}`;
 
-  // prompt labels
-  const promptEl = document.getElementById("prompt");
-  const wordEl = document.getElementById("word");
-  const fb = document.getElementById("feedback");
-  fb.innerText = "";
+if (currentDirection === "en_vi") { // giữ key nội bộ cho “left->right”
+  currentPromptText = card.en;
+  currentCorrectText = card.target;
+} else {
+  currentPromptText = card.target;
+  currentCorrectText = card.en;
+}
 
-  promptEl.innerText = `Box ${st.box} • Translate: ${currentDirection === "en_vi" ? "EN → VI" : "VI → EN"}`;
-  wordEl.innerText = currentPromptText;
+promptEl.innerText = `Box ${st.box} • Translate: ${currentDirection === "en_vi" ? leftToRight : rightToLeft}`;
+wordEl.innerText = currentPromptText;
 
   if (settings.mode === "typing") {
     const input = document.getElementById("answer");
@@ -545,7 +553,7 @@ function submitAnswer() {
 
 // ---------- MCQ ----------
 function pickWrongChoices(correctChoiceText) {
-  const pool = vocab.map(v => (currentDirection === "en_vi") ? v.vi : v.en)
+  const pool = vocab.map(v => (currentDirection === "en_vi") ? v.target : v.en)
     .filter(x => x && stripVN(x) !== stripVN(correctChoiceText));
 
   const chosen = new Set();
@@ -792,16 +800,25 @@ async function loadVocabCSV() {
 
   // header
   const headerRaw = splitCSVLine(lines[0] || "").map(x => (x || "").trim().toLowerCase());
-  // accept typo "vietnamse" too
-  const hasHeader =
-    headerRaw.includes("english") &&
-    (headerRaw.includes("vietnamese") || headerRaw.includes("vietnamse"));
 
-  const dataLines = hasHeader ? lines.slice(1) : lines;
+const hasHeader = headerRaw.includes("english") && headerRaw.includes("id");
 
-  const idIdx = headerRaw.indexOf("id");
-  const enIdx = headerRaw.indexOf("english");
-  const viIdx = headerRaw.indexOf("vietnamese") >= 0 ? headerRaw.indexOf("vietnamese") : headerRaw.indexOf("vietnamse");
+// target column: ưu tiên theo pack, fallback: cột đầu tiên KHÔNG phải id/english
+const preferredTarget = {
+  en_vi: ["vietnamese", "vietnamse", "vi", "target"],
+  en_ko: ["korean", "ko", "target"],
+  en_zh: ["chinese", "zh", "target"],
+}[currentLang] || ["target", "vietnamese", "vietnamse"];
+
+let targetKey =
+  preferredTarget.find(k => headerRaw.includes(k)) ||
+  headerRaw.find(h => h && !["id", "english"].includes(h));
+
+const dataLines = hasHeader ? lines.slice(1) : lines;
+
+const idIdx = headerRaw.indexOf("id");
+const enIdx = headerRaw.indexOf("english");
+const targetIdx = targetKey ? headerRaw.indexOf(targetKey) : -1;
 
   const used = new Map(); // ensure unique ids if generated
 
@@ -810,36 +827,24 @@ async function loadVocabCSV() {
 
     // If no header: assume [english, vietnamese]
     let en = "";
-    let vi = "";
-    let id = "";
+let target = "";
+let id = "";
 
-    if (hasHeader) {
-      if (enIdx >= 0) en = (cols[enIdx] || "").trim();
-      if (viIdx >= 0) {
-        // keep commas in meaning: join remaining cols from viIdx
-        vi = (cols.slice(viIdx).join(",") || "").trim();
-      }
-      if (idIdx >= 0) id = (cols[idIdx] || "").trim();
-    } else {
-      if (cols.length < 2) return null;
-      en = (cols[0] || "").trim();
-      vi = (cols.slice(1).join(",") || "").trim();
-    }
+if (hasHeader) {
+  if (enIdx >= 0) en = (cols[enIdx] || "").trim();
+  if (targetIdx >= 0) target = (cols.slice(targetIdx).join(",") || "").trim();
+  if (idIdx >= 0) id = (cols[idIdx] || "").trim();
+} else {
+  if (cols.length < 2) return null;
+  en = (cols[0] || "").trim();
+  target = (cols.slice(1).join(",") || "").trim();
+}
 
-    if (!en || !vi) return null;
+if (!en || !target) return null;
 
-    if (!id) id = makeIdFromEnglish(en);
+if (!id) id = makeIdFromEnglish(en);
 
-    // ensure unique
-    if (used.has(id)) {
-      const n = used.get(id) + 1;
-      used.set(id, n);
-      id = `${id}_${n}`;
-    } else {
-      used.set(id, 1);
-    }
-
-    return { id, en, vi };
+return { id, en, target };
   }).filter(Boolean);
 
   console.log("VOCAB LOADED:", vocab.length);
@@ -869,6 +874,9 @@ async function loadVocabCSV() {
   setDeckUI();
   setDirectionUI();
   applyTheme(); 
+  const pair = currentPair();
+  document.getElementById("btnDirENVI") && (document.getElementById("btnDirENVI").textContent = `${pair.left}→${pair.right}`);
+  document.getElementById("btnDirVIEN") && (document.getElementById("btnDirVIEN").textContent = `${pair.right}→${pair.left}`);
 
   // wire import
   const input = document.getElementById("importFile");
