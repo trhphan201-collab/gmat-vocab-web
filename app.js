@@ -41,6 +41,10 @@ function currentPair() {
 let order = [];         // indices for normal study
 let currentIdx = null;  // index in vocab
 
+// Cached DOM refs (used a lot)
+const promptEl = document.getElementById("prompt");
+const wordEl = document.getElementById("word");
+
 // per-card prompt state
 let currentDirection = "en_vi";   // actual direction used for this card
 let currentPromptText = "";       // what we display on card
