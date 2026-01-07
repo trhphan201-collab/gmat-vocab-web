@@ -941,17 +941,22 @@ loadVocabCSV().catch(err => {
   document.getElementById("word").innerText = "Check data/gmat_en_vi.csv and reload.";
 });
 
-document.getElementById("btnENVI")?.addEventListener("click", () => {
-  currentLang = "en_vi";
-  loadVocabCSV();
-});
+function setVocabPack(lang){
+  currentLang = lang;
 
-document.getElementById("btnENKO")?.addEventListener("click", () => {
-  currentLang = "en_ko";
-  loadVocabCSV();
-});
+  document.getElementById("btnENVI")?.classList.toggle("active", lang === "en_vi");
+  document.getElementById("btnENKO")?.classList.toggle("active", lang === "en_ko");
+  document.getElementById("btnENZH")?.classList.toggle("active", lang === "en_zh");
 
-document.getElementById("btnENZH")?.addEventListener("click", () => {
-  currentLang = "en_zh";
+  localStorage.setItem("gmat_vocab_pack", lang);
   loadVocabCSV();
-});
+}
+
+const savedPack = localStorage.getItem("gmat_vocab_pack");
+if (savedPack) currentLang = savedPack;
+
+document.getElementById("btnENVI")?.addEventListener("click", () => setVocabPack("en_vi"));
+document.getElementById("btnENKO")?.addEventListener("click", () => setVocabPack("en_ko"));
+document.getElementById("btnENZH")?.addEventListener("click", () => setVocabPack("en_zh"));
+
+setVocabPack(currentLang); // ensures active UI on load

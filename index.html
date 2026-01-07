@@ -61,6 +61,12 @@
 
   <div class="row">
     <div class="backup">
+      <div class="lang-switch">
+        <button id="btnENVI" class="pill langPill">EN–VI</button>
+        <button id="btnENKO" class="pill langPill">EN–KO</button>
+        <button id="btnENZH" class="pill langPill">EN–ZH</button>
+      </div>
+      
       <button class="pill" onclick="exportProgress()">Export progress</button>
       <button class="pill" onclick="triggerImport()">Import progress</button>
       <button id="btnTheme" class="pill" onclick="toggleTheme()">🌙 Dark</button>
@@ -83,11 +89,6 @@
     </div>
     </div>
 
-    <div class="lang-bar">
-      <button id="btnENVI" class="lang-btn">EN–VI</button>
-      <button id="btnENKO" class="lang-btn">EN–KO</button>
-      <button id="btnENZH" class="lang-btn">EN–ZH</button>
-    </div> 
     <!-- FLASHCARDS -->
     <div id="flashArea" style="display:none;">
       <div id="flashHint" class="hint">
