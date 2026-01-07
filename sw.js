@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v3";               // <-- mỗi lần update logic/data, tăng v3 -> v4
+const CACHE_VERSION = "v4"; // <-- tăng version để bust cache
 const CACHE_NAME = `gmat-vocab-${CACHE_VERSION}`;
 
 const CORE_ASSETS = [
@@ -6,15 +6,15 @@ const CORE_ASSETS = [
   "./index.html",
   "./style.css",
   "./app.js",
-  "./vocab.csv",
-  "./manifest.json"
+  "./manifest.json",
+  "./data/gmat_en_vi.csv", // <-- dùng file mới
 ];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS))
   );
-  self.skipWaiting(); // dùng SW mới ngay
+  self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
@@ -54,15 +54,16 @@ self.addEventListener("fetch", (event) => {
   const req = event.request;
   const url = new URL(req.url);
 
-  // chỉ handle GET
   if (req.method !== "GET") return;
 
-  // Network-first cho data & code để khỏi bị kẹt bản cũ
-  if (url.pathname.endsWith("/app.js") || url.pathname.endsWith("/vocab.csv")) {
+  // Network-first cho code + data để khỏi bị kẹt bản cũ
+  if (
+    url.pathname.endsWith("/app.js") ||
+    url.pathname.includes("/data/") // <-- mọi file vocab trong folder data
+  ) {
     event.respondWith(networkFirst(req));
     return;
   }
 
-  // Với các file còn lại: vừa nhanh vừa tự update
   event.respondWith(staleWhileRevalidate(req));
 });
