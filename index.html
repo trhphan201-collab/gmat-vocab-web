@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GMAT Vocab Trainer</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+
+</head>
+<body>
+  <div class="header">
+  <h1>GMAT Vocab Trainer</h1>
+
+  <div class="topbars">
+    <div class="barrow">
+      <div id="todayText">Today: 0/30</div>
+      <div class="bar"><div id="todayBar" class="fill"></div></div>
+    </div>
+    <div class="barrow">
+      <div id="dueText">Due: 0</div>
+      <div class="bar"><div class="fill" style="width: 100%; opacity: 0.2;"></div></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="settings">
+      <label>Daily goal:</label>
+      <input id="goalInput" type="number" min="1" value="30">
+      <button onclick="setGoal()">Set</button>
+    </div>
+
+    <div class="stack">
+      <!-- MODE -->
+      <div class="mode">
+        <button id="btnTyping" class="pill active" onclick="setMode('typing')">Typing</button>
+        <button id="btnMCQ" class="pill" onclick="setMode('mcq')">MCQ</button>
+        <button id="btnFlash" class="pill" onclick="setMode('flash')">Flashcards</button>
+        <button id="btnTest" class="pill" onclick="setMode('test')">Mini Test</button>
+      </div>
+
+      <!-- DECK -->
+      <div class="mode">
+        <button id="btnDue" class="pill active" onclick="setDeck('due')">Due Deck</button>
+        <button id="btnFocus" class="pill" onclick="setDeck('focus')">Focus Deck</button>
+      </div>
+
+      <!-- DIRECTION -->
+      <div class="mode">
+        <button id="btnDirMixed" class="pill active" onclick="setDirection('mixed')">Mixed</button>
+        <button id="btnDirENVI" class="pill" onclick="setDirection('en_vi')">EN→VI</button>
+        <button id="btnDirVIEN" class="pill" onclick="setDirection('vi_en')">VI→EN</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="backup">
+      <button class="pill" onclick="exportProgress()">Export progress</button>
+      <button class="pill" onclick="triggerImport()">Import progress</button>
+      <button id="btnTheme" class="pill" onclick="toggleTheme()">🌙 Dark</button>
+      <input id="importFile" type="file" accept="application/json" style="display:none" />
+    </div>
+
+    <div class="mini">
+      <div id="focusInfo">Focus: 0</div>
+    </div>
+  </div>
+
+  <div id="card">
+    <div id="prompt"></div>
+    <div id="word"></div>
+    <div class="chipbar">
+      <span id="chipBox" class="chip">Box: 1</span>
+      <span id="chipStreak" class="chip chipWarn">Streak: 0</span>
+      <span id="chipDue" class="chip chipInfo">Due: 0</span>
+      <span id="chipFocus" class="chip chipInfo">Focus: 0</span>
+    </div>
+    </div>
+    <!-- FLASHCARDS -->
+    <div id="flashArea" style="display:none;">
+      <div id="flashHint" class="hint">
+        Tap to flip • Swipe right = got it • Swipe left = missed
+      </div>
+      <div class="buttons">
+        <button onclick="flashMissed()">I missed</button>
+        <button onclick="flashGotIt()">I got it</button>
+        <button onclick="nextCard()">Next</button>
+      </div>
+    </div>
+
+    <!-- MINI TEST -->
+    <div id="testArea" style="display:none;">
+      <div class="row">
+        <div class="settings">
+          <label>Test size:</label>
+          <input id="testSize" type="number" min="5" max="50" value="15">
+          <button onclick="startTest()">Start Test</button>
+          <button onclick="endTest()">End Test</button>
+        </div>
+        <div class="mini">
+          <div id="testStatus">Test: not started</div>
+        </div>
+      </div>
+
+      <div id="testSummary" class="summary" style="display:none;"></div>
+    </div>
+
+    <!-- TYPING -->
+    <div id="typingArea">
+      <input id="answer" placeholder="Type answer..." />
+      <div class="buttons">
+        <button onclick="submitAnswer()">Submit</button>
+        <button onclick="nextCard()">Next</button>
+      </div>
+    </div>
+
+    <!-- MCQ -->
+    <div id="mcqArea" style="display:none;">
+      <div id="mcqChoices" class="choices"></div>
+      <div class="buttons">
+        <button onclick="nextCard()">Next</button>
+      </div>
+    </div>
+
+    <div id="feedback"></div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js");
+    }
+  </script>
+  <div id="toast" class="toast" aria-live="polite"></div>
+</body>
+</html>

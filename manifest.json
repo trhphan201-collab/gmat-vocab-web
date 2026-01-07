@@ -1,0 +1,8 @@
+{
+  "name": "GMAT Vocab Trainer",
+  "short_name": "GMAT Vocab",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff"
+}
