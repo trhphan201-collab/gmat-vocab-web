@@ -775,7 +775,7 @@ document.addEventListener("keydown", (e) => {
 
 // ---------- init ----------
 async function loadVocabCSV() {
-  const res = await fetch("vocab.csv", { cache: "no-store" });
+  const res = await fetch("data/gmat_en_vi.csv", { cache: "no-store" });
   if (!res.ok) throw new Error(`Failed to load vocab.csv (${res.status})`);
 
   const text = await res.text();
@@ -909,6 +909,6 @@ async function loadVocabCSV() {
 loadVocabCSV().catch(err => {
   console.error(err);
   document.getElementById("prompt").innerText = "No vocab loaded.";
-  document.getElementById("word").innerText = "Check vocab.csv and reload.";
+  document.getElementById("word").innerText = "Check data/gmat_en_vi.csv and reload.";
 });
 
