@@ -115,6 +115,18 @@ function splitCSVLine(line) {
   return out.map(s => s.replace(/^"|"$/g, "").trim());
 }
 
+function makeIdFromEnglish(en) {
+  const s = (en || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+  return s ? `w_${s}` : `w_${Math.random().toString(36).slice(2, 10)}`;
+}
+
+
+
 // ---------- storage ----------
 function loadSettings() {
   const s = safeJSONParse(localStorage.getItem(SETTINGS_KEY), null);
@@ -157,7 +169,7 @@ function updateChips() {
 
   if (currentIdx !== null && vocab[currentIdx]) {
     const en = vocab[currentIdx].en;
-    ensureCard(en);
+    ensureCard(id);
     const box = progress[en].box ?? 1;
     const streak = progress[en].streak ?? 0;
 
@@ -177,28 +189,28 @@ function updateChips() {
 
 
 // ---------- progress ----------
-function ensureCard(en) {
-  if (!progress[en]) {
-    progress[en] = { box: 1, streak: 0, correct: 0, wrong: 0, lastSeen: 0, nextDue: 0 };
+function ensureCard(id) {
+  if (!progress[id]) {
+    progress[id] = { box: 1, streak: 0, correct: 0, wrong: 0, lastSeen: 0, nextDue: 0 };
   }
 }
 
-function isDue(en) {
-  ensureCard(en);
-  return (progress[en].nextDue ?? 0) <= nowTs();
+function isDue(id) {
+  ensureCard(id);
+  return (progress[id].nextDue ?? 0) <= nowTs();
 }
 
-function focusEligible(en) {
-  ensureCard(en);
-  return (progress[en].wrong ?? 0) >= 2;
+function focusEligible(id) {
+  ensureCard(id);
+  return (progress[id].wrong ?? 0) >= 2;
 }
 
 function getFocusCount() {
-  return vocab.reduce((acc, v) => acc + (focusEligible(v.en) ? 1 : 0), 0);
+  return vocab.reduce((acc, v) => acc + (focusEligible(v.id) ? 1 : 0), 0);
 }
 
 function getDueCount() {
-  return vocab.reduce((acc, v) => acc + (isDue(v.en) ? 1 : 0), 0);
+  return vocab.reduce((acc, v) => acc + (isDue(v.id) ? 1 : 0), 0);
 }
 
 // ---------- deck building ----------
@@ -207,7 +219,7 @@ function buildDeckIndices() {
 
   if (settings.deck === "focus") {
     for (let i = 0; i < vocab.length; i++) {
-      if (focusEligible(vocab[i].en)) indices.push(i);
+      if (focusEligible(vocab[i].id)) indices.push(i);
     }
     if (indices.length === 0) {
       // fallback to due if focus empty
@@ -220,7 +232,7 @@ function buildDeckIndices() {
 
   // due deck
   for (let i = 0; i < vocab.length; i++) {
-    if (isDue(vocab[i].en)) indices.push(i);
+    if (isDue(vocab[i].id)) indices.push(i);
   }
   if (indices.length > 0) return shuffle(indices);
 
@@ -301,8 +313,8 @@ function setPromptState() {
   if (currentIdx === null) return;
 
   const card = vocab[currentIdx];
-  ensureCard(card.en);
-  const st = progress[card.en];
+  ensureCard(card.id);
+  const st = progress[card.id];
 
   currentDirection = pickDirectionForCard();
 
@@ -381,7 +393,7 @@ function answersMatch(userText, correctText) {
 
 function applySRS(isCorrect) {
   const card = vocab[currentIdx];
-  const st = progress[card.en];
+  const st = progress[card.id];
 
   st.lastSeen = nowTs();
 
@@ -398,7 +410,7 @@ function applySRS(isCorrect) {
   const days = leitnerDays(st.box);
   st.nextDue = st.lastSeen + days * 24 * 3600 * 1000;
 
-  progress[card.en] = st;
+  progress[card.id] = st;
   saveProgress();
   bumpDaily(isCorrect);
   updateTopBar();
@@ -453,8 +465,8 @@ function markTestAnswer(isCorrect) {
   else {
     testMissed.push({ prompt: promptShown, correct });
     // push to focus immediately
-    ensureCard(card.en);
-    progress[card.en].wrong = Math.max(progress[card.en].wrong ?? 0, 2);
+    ensureCard(card.id);
+    progress[card.id].wrong = Math.max(progress[card.id].wrong ?? 0, 2);
     saveProgress();
   }
 
@@ -590,10 +602,11 @@ if (fb) fb.innerText = "";
 
 function flashMissed() {
   if (currentIdx === null) return;
-  const enKey = vocab[currentIdx].en;
+  const idKey = vocab[currentIdx].id;
+  ensureCard(idKey);
   applySRS(false);
   // push into focus immediately
-  progress[enKey].wrong = Math.max(progress[enKey].wrong ?? 0, 2);
+  progress[idKey].wrong = Math.max(progress[idKey].wrong ?? 0, 2);
   saveProgress();
   showToast(`❌ ${currentCorrectText}`, "bad", 6000);
 const fb = document.getElementById("feedback");
@@ -638,7 +651,18 @@ function handleImportFile(file) {
 
     if (data.progress && typeof data.progress === "object") {
       progress = { ...progress, ...data.progress };
-      for (const item of vocab) ensureCard(item.en);
+
+      // migrate possible old-format keys (english) -> ids
+      const enToId = {};
+      for (const item of vocab) enToId[item.en] = item.id;
+      for (const k of Object.keys(progress)) {
+        if (enToId[k] && !progress[enToId[k]]) {
+          progress[enToId[k]] = progress[k];
+          delete progress[k];
+        }
+      }
+
+      for (const item of vocab) ensureCard(item.id);
       saveProgress();
     }
 
@@ -750,27 +774,80 @@ async function loadVocabCSV() {
   if (!res.ok) throw new Error(`Failed to load vocab.csv (${res.status})`);
 
   const text = await res.text();
-  const lines = text.split(/\r?\n/).filter(Boolean);
+  const lines = text.split(/\r?\n/).filter(line => line.trim().length > 0);
 
   // header
-  const header = splitCSVLine(lines[0] || "").map(x => x.toLowerCase());
-  const hasHeader = header.includes("english") && header.includes("vietnamese");
+  const headerRaw = splitCSVLine(lines[0] || "").map(x => (x || "").trim().toLowerCase());
+  // accept typo "vietnamse" too
+  const hasHeader =
+    headerRaw.includes("english") &&
+    (headerRaw.includes("vietnamese") || headerRaw.includes("vietnamse"));
+
   const dataLines = hasHeader ? lines.slice(1) : lines;
 
-  vocab = dataLines.map(line => {
+  const idIdx = headerRaw.indexOf("id");
+  const enIdx = headerRaw.indexOf("english");
+  const viIdx = headerRaw.indexOf("vietnamese") >= 0 ? headerRaw.indexOf("vietnamese") : headerRaw.indexOf("vietnamse");
+
+  const used = new Map(); // ensure unique ids if generated
+
+  vocab = dataLines.map((line) => {
     const cols = splitCSVLine(line);
-    if (cols.length < 2) return null;
-    const en = (cols[0] || "").trim();
-    const vi = (cols.slice(1).join(",") || "").trim(); // keep commas in meaning
+
+    // If no header: assume [english, vietnamese]
+    let en = "";
+    let vi = "";
+    let id = "";
+
+    if (hasHeader) {
+      if (enIdx >= 0) en = (cols[enIdx] || "").trim();
+      if (viIdx >= 0) {
+        // keep commas in meaning: join remaining cols from viIdx
+        vi = (cols.slice(viIdx).join(",") || "").trim();
+      }
+      if (idIdx >= 0) id = (cols[idIdx] || "").trim();
+    } else {
+      if (cols.length < 2) return null;
+      en = (cols[0] || "").trim();
+      vi = (cols.slice(1).join(",") || "").trim();
+    }
+
     if (!en || !vi) return null;
-    return { en, vi };
+
+    if (!id) id = makeIdFromEnglish(en);
+
+    // ensure unique
+    if (used.has(id)) {
+      const n = used.get(id) + 1;
+      used.set(id, n);
+      id = `${id}_${n}`;
+    } else {
+      used.set(id, 1);
+    }
+
+    return { id, en, vi };
   }).filter(Boolean);
 
   console.log("VOCAB LOADED:", vocab.length);
 
   loadSettings();
   loadProgress();
-  for (const item of vocab) ensureCard(item.en);
+
+  // --- migrate old progress keys (english) -> new keys (id)
+  const enToId = {};
+  for (const item of vocab) enToId[item.en] = item.id;
+
+  let migrated = false;
+  for (const k of Object.keys(progress)) {
+    if (enToId[k] && !progress[enToId[k]]) {
+      progress[enToId[k]] = progress[k];
+      delete progress[k];
+      migrated = true;
+    }
+  }
+  if (migrated) saveProgress();
+
+  for (const item of vocab) ensureCard(item.id);
   saveProgress();
 
   document.getElementById("goalInput").value = String(settings.dailyGoal);
