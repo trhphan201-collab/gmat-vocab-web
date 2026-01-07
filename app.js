@@ -168,10 +168,10 @@ function updateChips() {
   if (chipFocus) chipFocus.textContent = `Focus: ${getFocusCount()}`;
 
   if (currentIdx !== null && vocab[currentIdx]) {
-    const en = vocab[currentIdx].en;
+    const id = vocab[currentIdx].id;
     ensureCard(id);
-    const box = progress[en].box ?? 1;
-    const streak = progress[en].streak ?? 0;
+    const box = progress[id].box ?? 1;
+    const streak = progress[id].streak ?? 0;
 
     if (chipBox) chipBox.textContent = `Box: ${box}`;
     if (chipStreak) chipStreak.textContent = `Streak: ${streak}`;
