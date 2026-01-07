@@ -167,25 +167,30 @@ function updateChips() {
   if (chipDue) chipDue.textContent = `Due: ${getDueCount()}`;
   if (chipFocus) chipFocus.textContent = `Focus: ${getFocusCount()}`;
 
-  if (currentIdx !== null && vocab[currentIdx]) {
-    const id = vocab[currentIdx].id;
-    ensureCard(id);
-    const box = progress[id].box ?? 1;
-    const streak = progress[id].streak ?? 0;
+  const card = vocab?.[currentIdx];
+  const id = card?.id;
 
-    if (chipBox) chipBox.textContent = `Box: ${box}`;
-    if (chipStreak) chipStreak.textContent = `Streak: ${streak}`;
-
-    // Optional: màu box theo box (nếu cậu đã làm phần box1..box5)
-    if (chipBox) {
-      chipBox.classList.remove("box1","box2","box3","box4","box5");
-      chipBox.classList.add(`box${Math.min(5, Math.max(1, box))}`);
-    }
-  } else {
+  if (!id) {
     if (chipBox) chipBox.textContent = "Box: -";
     if (chipStreak) chipStreak.textContent = "Streak: -";
+    return;
+  }
+
+  ensureCard(id);
+  const st = progress[id] || {};
+  const box = st.box ?? 1;
+  const streak = st.streak ?? 0;
+
+  if (chipBox) chipBox.textContent = `Box: ${box}`;
+  if (chipStreak) chipStreak.textContent = `Streak: ${streak}`;
+
+  // optional: màu theo box (nếu CSS có .box1..box5)
+  if (chipBox) {
+    chipBox.classList.remove("box1", "box2", "box3", "box4", "box5");
+    chipBox.classList.add(`box${Math.min(5, Math.max(1, box))}`);
   }
 }
+
 
 
 // ---------- progress ----------
