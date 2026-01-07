@@ -752,3 +752,23 @@ body:not([data-theme="dark"]) .mode{
   height: 6px !important;
   opacity: 0.85;
 }
+
+.lang-bar{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:10px 0;
+}
+
+.lang-btn{
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid rgba(0,0,0,.15);
+  background:#fff;
+  cursor:pointer;
+}
+
+.lang-btn.active{
+  font-weight:700;
+  border-color: rgba(0,0,0,.35);
+}
