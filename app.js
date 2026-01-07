@@ -263,10 +263,18 @@ function buildDeckIndices() {
   }
   if (indices.length > 0) return shuffle(indices);
 
-  // nothing due -> pick lowest box slice
+    // nothing due -> pick lowest box slice (use id keys)
   const sorted = [...Array(vocab.length).keys()].sort((a, b) => {
-    const ea = vocab[a].en, eb = vocab[b].en;
-    return (progress[ea].box - progress[eb].box) || ((progress[ea].nextDue ?? 0) - (progress[eb].nextDue ?? 0));
+    const ida = vocab[a].id;
+    const idb = vocab[b].id;
+
+    ensureCard(ida);
+    ensureCard(idb);
+
+    const pa = progress[ida];
+    const pb = progress[idb];
+
+    return (pa.box - pb.box) || ((pa.nextDue ?? 0) - (pb.nextDue ?? 0));
   });
   return shuffle(sorted.slice(0, Math.min(30, sorted.length)));
 }

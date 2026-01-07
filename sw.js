@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v4"; // <-- tăng version để bust cache
+const CACHE_VERSION = "v5"; // <-- tăng version để bust cache
 const CACHE_NAME = `gmat-vocab-${CACHE_VERSION}`;
 
 const CORE_ASSETS = [
