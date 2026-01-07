@@ -20,6 +20,14 @@ let settings = {
   theme: "system" // "system" | "light" | "dark"
 };
 
+let currentLang = "en_vi";
+
+const VOCAB_FILES = {
+  en_vi: "data/gmat_en_vi.csv",
+  en_ko: "data/gmat_en_ko.csv",
+  en_zh: "data/gmat_en_zh.csv",
+}; 
+
 let order = [];         // indices for normal study
 let currentIdx = null;  // index in vocab
 
@@ -639,6 +647,7 @@ function exportProgress() {
   URL.revokeObjectURL(url);
 }
 
+
 function triggerImport() {
   const input = document.getElementById("importFile");
   input.value = "";
@@ -775,7 +784,7 @@ document.addEventListener("keydown", (e) => {
 
 // ---------- init ----------
 async function loadVocabCSV() {
-  const res = await fetch("data/gmat_en_vi.csv", { cache: "no-store" });
+  const res = await fetch(VOCAB_FILES[currentLang], { cache: "no-store" });
   if (!res.ok) throw new Error(`Failed to load vocab.csv (${res.status})`);
 
   const text = await res.text();
@@ -912,3 +921,17 @@ loadVocabCSV().catch(err => {
   document.getElementById("word").innerText = "Check data/gmat_en_vi.csv and reload.";
 });
 
+document.getElementById("btnENVI")?.addEventListener("click", () => {
+  currentLang = "en_vi";
+  loadVocabCSV();
+});
+
+document.getElementById("btnENKO")?.addEventListener("click", () => {
+  currentLang = "en_ko";
+  loadVocabCSV();
+});
+
+document.getElementById("btnENZH")?.addEventListener("click", () => {
+  currentLang = "en_zh";
+  loadVocabCSV();
+});
