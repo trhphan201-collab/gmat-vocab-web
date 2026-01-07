@@ -1,0 +1,344 @@
+id,english,target
+gmat_0001,abate,减弱
+gmat_0002,aberration,像差
+gmat_0003,abhor,痛恨
+gmat_0004,abide by,信守
+gmat_0005,abrupt,突然
+gmat_0006,abstain,弃权
+gmat_0007,acclaim,欢呼
+gmat_0008,account for,账户
+gmat_0009,accrue,累积
+gmat_0010,accuse,控
+gmat_0011,acknowledge,承认
+gmat_0012,acquiesce,默许
+gmat_0013,acquit,开释
+gmat_0014,acute,急性
+gmat_0015,adverse,不利
+gmat_0016,advocate,提倡
+gmat_0017,aggregate,总计的
+gmat_0018,albeit,尽管
+gmat_0019,alternative explanation,另一种解释
+gmat_0020,ambiguous,模糊的
+gmat_0021,ambivalent,矛盾
+gmat_0022,ameliorate,改善
+gmat_0023,anachronistic,不合时宜的
+gmat_0024,analogous,类似的
+gmat_0025,analogy,类比
+gmat_0026,anecdotal,轶事
+gmat_0027,anomaly,异常
+gmat_0028,antagonistic,敌对的
+gmat_0029,apathy,冷漠
+gmat_0030,appeal,上诉
+gmat_0031,appeal against,上诉
+gmat_0032,appraise,评价
+gmat_0033,arbitrary,随意的
+gmat_0034,arduous,艰巨
+gmat_0035,articulate,能言善辩
+gmat_0036,ascertain,探明
+gmat_0037,assault,突击
+gmat_0038,assert,断言
+gmat_0039,assess,评估
+gmat_0040,assiduous,刻苦
+gmat_0041,assumption,假设
+gmat_0042,attenuate,衰减
+gmat_0043,attribute (to),属性（到）
+gmat_0044,attribute to,归因于
+gmat_0045,augment,增强
+gmat_0046,austere,简朴
+gmat_0047,authentic,真正的
+gmat_0048,avert,避免
+gmat_0049,bailiff,法警
+gmat_0050,beyond a reasonable doubt,毫无疑问
+gmat_0051,bias,偏见
+gmat_0052,biased sample,有偏样本
+gmat_0053,bolster,支撑
+gmat_0054,broadly,总体而言
+gmat_0055,burden of proof,举证责任
+gmat_0056,burgeon,发芽
+gmat_0057,buttress,支持
+gmat_0058,call into question,质疑
+gmat_0059,candid,坦率
+gmat_0060,capricious,任性
+gmat_0061,case,案件
+gmat_0062,cast doubt on,对……表示怀疑
+gmat_0063,catalyst,催化剂
+gmat_0064,causal,因果关系
+gmat_0065,cause-and-effect,因果关系
+gmat_0066,cautionary,警告
+gmat_0067,caveat,注意
+gmat_0068,charge,收费
+gmat_0069,claim,宣称
+gmat_0070,claimant,索赔
+gmat_0071,coherent,相干
+gmat_0072,coincide,重合
+gmat_0073,coincidence,巧合
+gmat_0074,collate,整理
+gmat_0075,community service,社区服务
+gmat_0076,comparison,比较
+gmat_0077,compelling,令人信服的
+gmat_0078,compensate,补偿
+gmat_0079,complacent,自满
+gmat_0080,complement,补充
+gmat_0081,comprise,包括
+gmat_0082,concede,承认
+gmat_0083,conclusion,结论
+gmat_0084,conclusive,确凿
+gmat_0085,concur,同意
+gmat_0086,conduct (n.),行为（名词）
+gmat_0087,confound,混杂
+gmat_0088,confounding factor,混杂因素
+gmat_0089,conjecture,推测
+gmat_0090,consequently,最后
+gmat_0091,constrain,约束
+gmat_0092,contend,抗衡
+gmat_0093,contradict,顶撞
+gmat_0094,conventional,传统的
+gmat_0095,convict,定罪
+gmat_0096,correlation,相关性
+gmat_0097,corroborate,证实
+gmat_0098,counterargument,反驳论点
+gmat_0099,counterintuitive,违反直觉的
+gmat_0100,court clerk,法院书记员
+gmat_0101,courtroom,法庭
+gmat_0102,cross-examine,交叉询问
+gmat_0103,crucial,至关重要的
+gmat_0104,culminate,最终
+gmat_0105,cursory,粗略地
+gmat_0106,deem,认为
+gmat_0107,defend,保卫
+gmat_0108,defendant,被告
+gmat_0109,defense attorney,辩护律师
+gmat_0110,defense lawyer,辩护律师
+gmat_0111,definitive,最终的
+gmat_0112,delineate,勾勒
+gmat_0113,demonstrate,证明
+gmat_0114,depict,描绘
+gmat_0115,deplete,消耗
+gmat_0116,derive,派生
+gmat_0117,detrimental,有害的
+gmat_0118,deviate,偏离
+gmat_0119,diagnose,诊断
+gmat_0120,discrepancy,差异
+gmat_0121,discrete,离散的
+gmat_0122,disinterested,无私的
+gmat_0123,disparate,差异
+gmat_0124,disseminate,传播
+gmat_0125,distort,歪曲
+gmat_0126,diverge,分歧
+gmat_0127,dogmatic,教条主义
+gmat_0128,draw a conclusion,得出结论
+gmat_0129,dubious,可疑
+gmat_0130,duration,期间
+gmat_0131,economical,经济
+gmat_0132,elicit,引出
+gmat_0133,eliminate,排除
+gmat_0134,empirical,经验
+gmat_0135,encroach,侵犯
+gmat_0136,endemic,地方性
+gmat_0137,endorse,认可
+gmat_0138,enhance,提高
+gmat_0139,ensue,随之而来
+gmat_0140,entail,包含
+gmat_0141,entrenched,根深蒂固的
+gmat_0142,equivocal,模棱两可
+gmat_0143,eradicate,根除
+gmat_0144,erroneous,错误
+gmat_0145,eschew,避免
+gmat_0146,establish,建立
+gmat_0147,estimate,估计
+gmat_0148,evidence,证据
+gmat_0149,exacerbate,加剧
+gmat_0150,exacting,严格
+gmat_0151,exception,例外
+gmat_0152,exemplify,举例说明
+gmat_0153,exhaustive,详尽的
+gmat_0154,expedite,加快
+gmat_0155,expert witness,专家证人
+gmat_0156,explain away,解释一下
+gmat_0157,explicit,显式
+gmat_0158,exposure,接触
+gmat_0159,extrapolate,推断
+gmat_0160,feasible,可行的
+gmat_0161,felony,重罪
+gmat_0162,fine,美好的
+gmat_0163,flawed,有缺陷的
+gmat_0164,flawed analogy,不恰当的类比
+gmat_0165,fluctuate,波动
+gmat_0166,foresee,预见
+gmat_0167,fortuitous,偶然
+gmat_0168,fraud,欺诈罪
+gmat_0169,frugal,节俭
+gmat_0170,fundamental,基本的
+gmat_0171,futile,徒劳
+gmat_0172,generalization,概括
+gmat_0173,generalize,概括
+gmat_0174,germane,相关的
+gmat_0175,hamper,阻碍
+gmat_0176,hearing,听力
+gmat_0177,hence,因此
+gmat_0178,heterogeneous,异质
+gmat_0179,hidden variable,隐藏变量
+gmat_0180,hypothesis,假设
+gmat_0181,illuminate,照亮
+gmat_0182,implicit,隐式
+gmat_0183,implicit assumption,隐含假设
+gmat_0184,imply,意味着
+gmat_0185,impose,强加
+gmat_0186,imprisonment,监禁
+gmat_0187,in accordance with the law,依法
+gmat_0188,inadvertent,无意的
+gmat_0189,incentive,激励
+gmat_0190,inconclusive,结论不明
+gmat_0191,inconsistent,不一致
+gmat_0192,incur,招致
+gmat_0193,indicate,表明
+gmat_0194,inevitable,不可避免的
+gmat_0195,infer,推断
+gmat_0196,inference,推理
+gmat_0197,inflate,膨胀
+gmat_0198,inhibit,抑制
+gmat_0199,innovative,创新的
+gmat_0200,insight,洞察力
+gmat_0201,integral,不可缺少的
+gmat_0202,intermittent,间歇性的
+gmat_0203,interpretation,解释
+gmat_0204,intrinsic,固有的
+gmat_0205,invoke,调用
+gmat_0206,irrelevant,无关紧要
+gmat_0207,jail sentence,监禁
+gmat_0208,judge,法官
+gmat_0209,juror,陪审员
+gmat_0210,jury,陪审团
+gmat_0211,justify,证明合法
+gmat_0212,lament,哀叹
+gmat_0213,lead to,导致
+gmat_0214,lend support to,提供支持
+gmat_0215,lenient,宽容
+gmat_0216,life imprisonment,无期徒刑
+gmat_0217,likelihood,可能性
+gmat_0218,logically follow,逻辑上遵循
+gmat_0219,lucid,清醒的
+gmat_0220,magnitude,震级
+gmat_0221,maintain,维持
+gmat_0222,manslaughter,过失杀人
+gmat_0223,marginal,边缘
+gmat_0224,misdemeanor,轻罪
+gmat_0225,misinterpret,曲解
+gmat_0226,misleading,误导性的
+gmat_0227,mitigate,缓解
+gmat_0228,murder,谋杀
+gmat_0229,mutually exclusive,互斥的
+gmat_0230,notion,概念
+gmat_0231,notwithstanding,虽然
+gmat_0232,nuance,细微差别
+gmat_0233,objection,异议
+gmat_0234,objective,客观的
+gmat_0235,obscure,朦胧
+gmat_0236,omit,忽略
+gmat_0237,ostensibly,表面上
+gmat_0238,out of scope,超出范围
+gmat_0239,outcome,结果
+gmat_0240,overgeneralize,过度概括
+gmat_0241,overlook,俯瞰
+gmat_0242,overlooked factor,被忽视的因素
+gmat_0243,paradox,悖论
+gmat_0244,parameter,范围
+gmat_0245,partial,部分的
+gmat_0246,peculiar,奇特
+gmat_0247,perceive,感知
+gmat_0248,pertain to,与……有关
+gmat_0249,pertinent,相关
+gmat_0250,plaintiff,原告
+gmat_0251,plausible,合情合理
+gmat_0252,plead guilty,认罪
+gmat_0253,plead not guilty,拒不不认罪
+gmat_0254,postulate,假定
+gmat_0255,pragmatic,务实
+gmat_0256,precedent,先例
+gmat_0257,precise,精确的
+gmat_0258,preclude,排除
+gmat_0259,predict,预测
+gmat_0260,predominant,主要的
+gmat_0261,premise,前提
+gmat_0262,presume,怙
+gmat_0263,presumption of innocence,无罪推定
+gmat_0264,presuppose,预设
+gmat_0265,prior to,之前
+gmat_0266,probability,可能性
+gmat_0267,probation,缓刑
+gmat_0268,proponent,支持者
+gmat_0269,proportion,部分
+gmat_0270,prosecute,起诉
+gmat_0271,prosecutor,检察官
+gmat_0272,prospect,前景
+gmat_0273,provided that,前提是
+gmat_0274,provisional,临时
+gmat_0275,qualification,资格
+gmat_0276,qualify (a claim),符合（索赔）
+gmat_0277,qualify a claim,符合索赔条件
+gmat_0278,quantify,量化
+gmat_0279,rationale,理由
+gmat_0280,rebut,驳斥
+gmat_0281,reconcile,调和
+gmat_0282,redundant,多余的
+gmat_0283,refute,反驳
+gmat_0284,reinforce,加强
+gmat_0285,reluctant,不情愿的
+gmat_0286,rely on,依靠
+gmat_0287,remedy,补救
+gmat_0288,representative,代表
+gmat_0289,resilient,有弹性的
+gmat_0290,resolution,解决
+gmat_0291,restrain,抑制
+gmat_0292,result from,结果
+gmat_0293,retain,保持
+gmat_0294,reveal,揭示
+gmat_0295,rigorous,严格的
+gmat_0296,risk,风险
+gmat_0297,rule of law,法治
+gmat_0298,salient,显著的
+gmat_0299,sample,样本
+gmat_0300,scope,范围
+gmat_0301,scrutinize,仔细审查
+gmat_0302,seemingly inconsistent,看似矛盾
+gmat_0303,sentence,句子
+gmat_0304,sentence (verb),句子（动词）
+gmat_0305,significant,重要的
+gmat_0306,simultaneously,同时地
+gmat_0307,skeptical,怀疑论者
+gmat_0308,speculate,推测
+gmat_0309,spur,刺
+gmat_0310,spurious,虚假的
+gmat_0311,stance,姿态
+gmat_0312,statistical,统计
+gmat_0313,strengthen,加强
+gmat_0314,subsequent,随后的
+gmat_0315,substantiate,证实
+gmat_0316,subtle,微妙的
+gmat_0317,sufficient,充足的
+gmat_0318,surmise,推测
+gmat_0319,sustain,维持
+gmat_0320,take for granted,认为是理所当然的
+gmat_0321,tentative,暂定的
+gmat_0322,testify,作证
+gmat_0323,testimony,见证
+gmat_0324,theft,盗窃
+gmat_0325,thereby,从而
+gmat_0326,thrive,蓬勃发展
+gmat_0327,trace (to),追踪（到）
+gmat_0328,transient,瞬态
+gmat_0329,trial,审判
+gmat_0330,uncertain,不确定
+gmat_0331,underlying assumption,基本假设
+gmat_0332,undermine,破坏
+gmat_0333,unless,除非
+gmat_0334,unprecedented,空前的
+gmat_0335,validate,证实
+gmat_0336,variable,多变的
+gmat_0337,verdict,判决
+gmat_0338,viable,可行的
+gmat_0339,warrant,保证
+gmat_0340,warrant (n.),逮捕令（n.）
+gmat_0341,weaken,削弱
+gmat_0342,whereas,然而
+gmat_0343,witness,证人
