@@ -170,7 +170,6 @@ function loadProgress() {
 function saveProgress() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
 }
-scheduleCloudSave();
 
 function getDailyStats() {
   const stats = safeJSONParse(localStorage.getItem(DAILY_KEY), {});
@@ -451,6 +450,7 @@ function applySRS(isCorrect) {
 
   progress[card.id] = st;
   saveProgress();
+  scheduleCloudSave();
   bumpDaily(isCorrect);
   updateTopBar();
 }
@@ -507,6 +507,7 @@ function markTestAnswer(isCorrect) {
     ensureCard(card.id);
     progress[card.id].wrong = Math.max(progress[card.id].wrong ?? 0, 2);
     saveProgress();
+    scheduleCloudSave();
   }
 
   updateTestStatus();
@@ -647,6 +648,7 @@ function flashMissed() {
   // push into focus immediately
   progress[idKey].wrong = Math.max(progress[idKey].wrong ?? 0, 2);
   saveProgress();
+  scheduleCloudSave();
   showToast(`❌ ${currentCorrectText}`, "bad", 6000);
 const fb = document.getElementById("feedback");
 if (fb) fb.innerText = "";
@@ -837,7 +839,7 @@ async function cloudLoadOrInit() {
 
   if (data) {
     // 👉 CÓ DATA TRÊN CLOUD → ghi đè local
-    localStorage.setItem(PROGRESS_KEY, JSON.stringify(data.progress));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data.progress));
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(data.settings));
 
     console.log("Cloud progress loaded");
@@ -860,7 +862,7 @@ async function cloudSave() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return; // chưa login thì bỏ qua
 
-  const progress = JSON.parse(localStorage.getItem(PROGRESS_KEY) || "{}");
+  const progress = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
   const settings = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
 
   const { error } = await supabase.from("user_progress").upsert({
