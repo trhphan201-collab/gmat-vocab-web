@@ -59,6 +59,8 @@ self.addEventListener("fetch", (event) => {
   // Network-first cho code + data để khỏi bị kẹt bản cũ
   if (
     url.pathname.endsWith("/app.js") ||
+    url.pathname.endsWith("/index.html") ||
+    url.pathname.endsWith("/style.css") ||
     url.pathname.includes("/data/") // <-- mọi file vocab trong folder data
   ) {
     event.respondWith(networkFirst(req));
