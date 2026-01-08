@@ -6,6 +6,11 @@
 // - Export/Import progress JSON
 // - Keyboard shortcuts (Enter submit, A/B/C/D, Space next)
 
+const supabase = window.supabase.createClient(
+  window.SUPABASE_URL,
+  window.SUPABASE_ANON_KEY
+);
+
 const STORAGE_KEY = "gmat_vocab_progress_v3";
 const SETTINGS_KEY = "gmat_vocab_settings_v3";
 const DAILY_KEY = "gmat_vocab_daily_v3";
@@ -165,6 +170,7 @@ function loadProgress() {
 function saveProgress() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
 }
+scheduleCloudSave();
 
 function getDailyStats() {
   const stats = safeJSONParse(localStorage.getItem(DAILY_KEY), {});
@@ -803,6 +809,74 @@ document.addEventListener("keydown", (e) => {
 });
 
 // ---------- init ----------
+// === STEP 12: LOAD PROGRESS FROM CLOUD AFTER LOGIN ===
+supabase.auth.onAuthStateChange(async (event, session) => {
+  if (session && session.user) {
+    // đã login
+    console.log("Logged in:", session.user.email);
+    await cloudLoadOrInit();
+  } else {
+    console.log("Guest mode");
+  }
+});
+
+async function cloudLoadOrInit() {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const { data, error } = await supabase
+    .from("user_progress")
+    .select("progress, settings")
+    .eq("user_id", user.id)
+    .single();
+
+  if (error && error.code !== "PGRST116") {
+    console.error("Cloud load error:", error);
+    return;
+  }
+
+  if (data) {
+    // 👉 CÓ DATA TRÊN CLOUD → ghi đè local
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(data.progress));
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(data.settings));
+
+    console.log("Cloud progress loaded");
+    location.reload(); // rất quan trọng
+  } else {
+    // 👉 CHƯA CÓ DATA → user mới → đẩy local lên cloud
+    console.log("No cloud data, pushing local");
+    await cloudSave();
+  }
+}
+// === STEP 13: SAVE PROGRESS TO CLOUD (DEBOUNCED) ===
+let cloudSaveTimer = null;
+
+function scheduleCloudSave() {
+  clearTimeout(cloudSaveTimer);
+  cloudSaveTimer = setTimeout(cloudSave, 1200);
+}
+
+async function cloudSave() {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return; // chưa login thì bỏ qua
+
+  const progress = JSON.parse(localStorage.getItem(PROGRESS_KEY) || "{}");
+  const settings = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
+
+  const { error } = await supabase.from("user_progress").upsert({
+    user_id: user.id,
+    progress,
+    settings,
+    updated_at: new Date().toISOString()
+  });
+
+  if (error) {
+    console.error("Cloud save error:", error);
+  } else {
+    console.log("Cloud saved");
+  }
+}
+
 async function loadVocabCSV() {
   const res = await fetch(VOCAB_FILES[currentLang], { cache: "no-store" });
   if (!res.ok) throw new Error(`Failed to load vocab.csv (${res.status})`);
@@ -957,4 +1031,24 @@ if (packSelect) {
   packSelect.addEventListener("change", (e) => {
     setVocabPack(e.target.value);
   });
+}
+async function signup(){
+  const email = authEmail.value;
+  const password = authPass.value;
+
+  const { error } = await supabase.auth.signUp({ email, password });
+  if (error) alert(error.message);
+  else alert("Account created. You can login now.");
+}
+
+async function login(){
+  const email = authEmail.value;
+  const password = authPass.value;
+
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) alert(error.message);
+}
+
+async function logout(){
+  await supabase.auth.signOut();
 }
