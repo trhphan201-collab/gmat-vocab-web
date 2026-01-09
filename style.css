@@ -871,3 +871,8 @@ body[data-theme="dark"] .pill-select{
   border-color: rgba(255, 90, 90, .35);
 }
 #todayText, #dueText{ font-size: 12px !important; }
+
+.pill.danger:hover{
+  background: rgba(255,90,90,.12);
+  border-color: rgba(255,90,90,.6);
+}

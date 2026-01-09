@@ -1066,22 +1066,31 @@ async function login(){
 }
 
 async function logout(){
-  await sb.auth.signOut();
+  const { error } = await sb.auth.signOut();
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  // reset UI về guest
+  renderAuthUI(null);
+
+  // optional: clear local state nếu muốn
+  console.log("Logged out");
 }
 
 function renderAuthUI(user){
   const guest = document.getElementById("authGuest");
   const userBox = document.getElementById("authUser");
-  const userEmail = document.getElementById("authUserEmail");
-
-  if (!guest || !userBox || !userEmail) return;
+  const emailEl = document.getElementById("authUserEmail");
 
   if (user){
-    guest.classList.add("hidden");
-    userBox.classList.remove("hidden");
-    userEmail.textContent = `👤 ${user.email}`;
+    guest?.classList.add("hidden");
+    userBox?.classList.remove("hidden");
+    if (emailEl) emailEl.textContent = `👤 ${user.email}`;
   } else {
-    userBox.classList.add("hidden");
-    guest.classList.remove("hidden");
+    userBox?.classList.add("hidden");
+    guest?.classList.remove("hidden");
   }
 }
+
