@@ -685,7 +685,7 @@ body:not([data-theme="dark"]) .btnGhost{
 /* ===== Slim progress bars ===== */
 .bar{ height: 8px !important; }
 .barrow{ grid-template-columns: 92px 1fr !important; }
-#todayText, #dueText{ font-size: 12px !important; }
+#todayText{ font-size: 12px !important; }
 /* ===== Segmented controls ===== */
 .mode{
   background: rgba(255,255,255,0.06);
@@ -870,3 +870,4 @@ body[data-theme="dark"] .pill-select{
 .pill.danger{
   border-color: rgba(255, 90, 90, .35);
 }
+#todayText, #dueText{ font-size: 12px !important; }

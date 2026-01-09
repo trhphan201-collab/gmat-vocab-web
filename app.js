@@ -333,15 +333,19 @@ function updateTopBar() {
   const attempts = stats[day].attempts;
   const goal = settings.dailyGoal;
 
-  document.getElementById("todayText").innerText = `Today: ${attempts}/${goal}`;
-  const pct = goal > 0 ? Math.min(100, Math.round((attempts / goal) * 100)) : 0;
-  document.getElementById("todayBar").style.width = pct + "%";
+  const todayEl = document.getElementById("todayText");
+  if (todayEl) todayEl.innerText = `Today: ${attempts}/${goal}`;
 
-  document.getElementById("dueText").innerText = `Due: ${getDueCount()}`;
-  const focusEl = document.getElementById("focusInfo");
-  if (focusEl) focusEl.innerText = `Focus: ${getFocusCount()}`;
-  updateChips();
+  const pct = goal > 0 ? Math.min(100, Math.round((attempts / goal) * 100)) : 0;
+  const barEl = document.getElementById("todayBar");
+  if (barEl) barEl.style.width = pct + "%";
+
+  // ❌ bỏ Due trên topbar
+  // ❌ bỏ Focus pill góc phải
+
+  updateChips(); // vẫn giữ chips trong card (Due/Focus ở dưới)
 }
+
 
 function pickDirectionForCard() {
   if (settings.direction === "en_vi") return "en_vi";
