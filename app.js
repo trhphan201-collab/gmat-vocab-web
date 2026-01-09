@@ -816,25 +816,24 @@ document.addEventListener("keydown", (e) => {
 
 // ---------- init ----------
 // === STEP 12: LOAD PROGRESS FROM CLOUD AFTER LOGIN ===
-sb.auth.onAuthStateChange(async (event, session) => {
-  renderAuthUI(session?.user || null);
-
-  if (session?.user) {
-    await cloudLoadOrInit();
-  }
+sb.auth.onAuthStateChange(async (_event, session) => {
+  renderAuth(session);
+  if (session?.user) await cloudLoadOrInit();
 });
 
 (async () => {
-  const { data: { user } } = await sb.auth.getUser();
-  renderAuthUI(user || null);
+  const { data } = await sb.auth.getSession();
+  renderAuth(data?.session);
+  if (data?.session?.user) await cloudLoadOrInit();
 })();
+
 
 
 async function cloudLoadOrInit() {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
 
-  const { data, error } = await supabase
+  const { data, error } = await sb
     .from("user_progress")
     .select("progress, settings")
     .eq("user_id", user.id)
