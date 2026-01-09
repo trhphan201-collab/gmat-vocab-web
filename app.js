@@ -6,7 +6,7 @@
 // - Export/Import progress JSON
 // - Keyboard shortcuts (Enter submit, A/B/C/D, Space next)
 
-const supabase = window.supabase.createClient(
+const sb = window.supabase.createClient(
   window.SUPABASE_URL,
   window.SUPABASE_ANON_KEY
 );
@@ -812,7 +812,7 @@ document.addEventListener("keydown", (e) => {
 
 // ---------- init ----------
 // === STEP 12: LOAD PROGRESS FROM CLOUD AFTER LOGIN ===
-supabase.auth.onAuthStateChange(async (event, session) => {
+sb.auth.onAuthStateChange(async (event, session) => {
   if (session && session.user) {
     // đã login
     console.log("Logged in:", session.user.email);
@@ -823,7 +823,7 @@ supabase.auth.onAuthStateChange(async (event, session) => {
 });
 
 async function cloudLoadOrInit() {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await sb.auth.getUser();
   if (!user) return;
 
   const { data, error } = await supabase
@@ -859,13 +859,13 @@ function scheduleCloudSave() {
 }
 
 async function cloudSave() {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await sb.auth.getUser();
   if (!user) return; // chưa login thì bỏ qua
 
   const progress = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
   const settings = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
 
-  const { error } = await supabase.from("user_progress").upsert({
+  const { error } = await sb.from("user_progress").upsert({
     user_id: user.id,
     progress,
     settings,
@@ -1038,7 +1038,7 @@ async function signup(){
   const email = authEmail.value;
   const password = authPass.value;
 
-  const { error } = await supabase.auth.signUp({ email, password });
+  const { error } = await sb.auth.signUp({ email, password });
   if (error) alert(error.message);
   else alert("Account created. You can login now.");
 }
@@ -1047,10 +1047,10 @@ async function login(){
   const email = authEmail.value;
   const password = authPass.value;
 
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { error } = await sb.auth.signInWithPassword({ email, password });
   if (error) alert(error.message);
 }
 
 async function logout(){
-  await supabase.auth.signOut();
+  await sb.auth.signOut();
 }
