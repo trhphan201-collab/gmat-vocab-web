@@ -73,13 +73,22 @@
     <option value="en_zh">EN–ZH</option>
   </select>
 </div>
-    <div class="auth-bar">
-  <input id="authEmail" type="email" placeholder="email" />
-  <input id="authPass" type="password" placeholder="password" />
-  <button class="pill" onclick="login()">Login</button>
-  <button class="pill" onclick="signup()">Sign up</button>
-  <button class="pill" onclick="logout()" style="display:none">Logout</button>
-  <span id="authStatus" class="muted"></span>
+    <div class="auth-wrap">
+  <!-- Guest -->
+  <div id="authGuest" class="auth-guest">
+    <span class="auth-hint">Sign in to sync</span>
+    <input id="authEmail" type="email" placeholder="email" autocomplete="email" />
+    <input id="authPass" type="password" placeholder="password" autocomplete="current-password" />
+    <button class="pill" onclick="login()">Login</button>
+    <button class="pill" onclick="signup()">Sign up</button>
+  </div>
+
+  <!-- Logged in -->
+  <div id="authUser" class="auth-user hidden">
+    <span class="user-pill" id="authUserEmail">👤</span>
+    <span class="sync-pill" id="syncStatus">☁️ Saved</span>
+    <button class="pill danger" onclick="logout()">Logout</button>
+  </div>
 </div>
       <button class="pill" onclick="exportProgress()">Export progress</button>
       <button class="pill" onclick="triggerImport()">Import progress</button>

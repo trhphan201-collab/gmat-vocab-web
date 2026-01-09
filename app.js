@@ -813,14 +813,18 @@ document.addEventListener("keydown", (e) => {
 // ---------- init ----------
 // === STEP 12: LOAD PROGRESS FROM CLOUD AFTER LOGIN ===
 sb.auth.onAuthStateChange(async (event, session) => {
-  if (session && session.user) {
-    // đã login
-    console.log("Logged in:", session.user.email);
+  renderAuthUI(session?.user || null);
+
+  if (session?.user) {
     await cloudLoadOrInit();
-  } else {
-    console.log("Guest mode");
   }
 });
+
+(async () => {
+  const { data: { user } } = await sb.auth.getUser();
+  renderAuthUI(user || null);
+})();
+
 
 async function cloudLoadOrInit() {
   const { data: { user } } = await sb.auth.getUser();
@@ -856,9 +860,15 @@ let cloudSaveTimer = null;
 function scheduleCloudSave() {
   clearTimeout(cloudSaveTimer);
   cloudSaveTimer = setTimeout(cloudSave, 1200);
+  const s = document.getElementById("syncStatus");
+if (s){ s.textContent = "☁️ Saving…"; s.classList.add("saving"); }
+
 }
 
 async function cloudSave() {
+  const s = document.getElementById("syncStatus");
+if (s){ s.textContent = "☁️ Saved"; s.classList.remove("saving"); }
+
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return; // chưa login thì bỏ qua
 
@@ -1053,4 +1063,21 @@ async function login(){
 
 async function logout(){
   await sb.auth.signOut();
+}
+
+function renderAuthUI(user){
+  const guest = document.getElementById("authGuest");
+  const userBox = document.getElementById("authUser");
+  const userEmail = document.getElementById("authUserEmail");
+
+  if (!guest || !userBox || !userEmail) return;
+
+  if (user){
+    guest.classList.add("hidden");
+    userBox.classList.remove("hidden");
+    userEmail.textContent = `👤 ${user.email}`;
+  } else {
+    userBox.classList.add("hidden");
+    guest.classList.remove("hidden");
+  }
 }

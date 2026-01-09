@@ -812,3 +812,61 @@ body[data-theme="dark"] .pill-select{
     linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.75) 50%),
     linear-gradient(135deg, rgba(255,255,255,0.75) 50%, transparent 50%);
 }
+.hidden { display: none !important; }
+
+.auth-wrap{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.auth-guest{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.auth-hint{
+  font-size:12px;
+  opacity:.75;
+}
+
+.auth-guest input{
+  height:36px;
+  padding:0 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  color: rgba(255,255,255,.92);
+  outline:none;
+  min-width:160px;
+}
+
+.auth-user{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.user-pill, .sync-pill{
+  height:36px;
+  display:inline-flex;
+  align-items:center;
+  padding:0 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  font-size:12px;
+  font-weight:600;
+  white-space:nowrap;
+}
+
+.sync-pill.saving{
+  opacity:.8;
+}
+
+.pill.danger{
+  border-color: rgba(255, 90, 90, .35);
+}
