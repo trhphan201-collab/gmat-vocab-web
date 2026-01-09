@@ -1048,49 +1048,86 @@ if (packSelect) {
     setVocabPack(e.target.value);
   });
 }
-async function signup(){
-  const email = authEmail.value;
-  const password = authPass.value;
+// =========================
+// Supabase Auth (FIXED)
+// =========================
+const sb = window.supabase?.createClient?.(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
 
-  const { error } = await sb.auth.signUp({ email, password });
-  if (error) alert(error.message);
-  else alert("Account created. You can login now.");
-}
+const authGuest = document.getElementById("authGuest");
+const authUser  = document.getElementById("authUser");
+const authUserEmail = document.getElementById("authUserEmail");
+const syncStatus = document.getElementById("syncStatus");
+const authEmail = document.getElementById("authEmail");
+const authPass  = document.getElementById("authPass");
 
-async function login(){
-  const email = authEmail.value;
-  const password = authPass.value;
+function renderAuth(session) {
+  const user = session?.user;
 
-  const { error } = await sb.auth.signInWithPassword({ email, password });
-  if (error) alert(error.message);
-}
+  if (!authGuest || !authUser) return;
 
-async function logout(){
-  const { error } = await sb.auth.signOut();
-  if (error) {
-    alert(error.message);
+  if (!user) {
+    authGuest.classList.remove("hidden");
+    authUser.classList.add("hidden");
+    if (syncStatus) syncStatus.innerText = "☁️ Local only";
     return;
   }
 
-  // reset UI về guest
-  renderAuthUI(null);
-
-  // optional: clear local state nếu muốn
-  console.log("Logged out");
+  authGuest.classList.add("hidden");
+  authUser.classList.remove("hidden");
+  if (authUserEmail) authUserEmail.innerText = `👤 ${user.email}`;
+  if (syncStatus) syncStatus.innerText = "☁️ Saved";
 }
 
-function renderAuthUI(user){
-  const guest = document.getElementById("authGuest");
-  const userBox = document.getElementById("authUser");
-  const emailEl = document.getElementById("authUserEmail");
+// expose to onclick="" in HTML
+window.signup = async function signup() {
+  if (!sb) return alert("Supabase client not initialized.");
 
-  if (user){
-    guest?.classList.add("hidden");
-    userBox?.classList.remove("hidden");
-    if (emailEl) emailEl.textContent = `👤 ${user.email}`;
-  } else {
-    userBox?.classList.add("hidden");
-    guest?.classList.remove("hidden");
+  const email = authEmail?.value?.trim();
+  const password = authPass?.value;
+
+  if (!email || !password) return alert("Enter email + password.");
+
+  const { error } = await sb.auth.signUp({ email, password });
+  if (error) return alert(error.message);
+
+  alert("Signed up. Check your email to confirm (if required), then login.");
+};
+
+window.login = async function login() {
+  if (!sb) return alert("Supabase client not initialized.");
+
+  const email = authEmail?.value?.trim();
+  const password = authPass?.value;
+
+  if (!email || !password) return alert("Enter email + password.");
+
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) return alert(error.message);
+};
+
+window.logout = async function logout() {
+  if (!sb) return alert("Supabase client not initialized.");
+
+  const { error } = await sb.auth.signOut();
+  if (error) return alert(error.message);
+
+  // UI will also update via onAuthStateChange, but this makes it instant:
+  renderAuth(null);
+};
+
+// initial + listener
+(async () => {
+  if (!sb) {
+    console.warn("Supabase client not initialized. Check SUPABASE_URL / ANON_KEY.");
+    return;
   }
-}
+
+  const { data } = await sb.auth.getSession();
+  renderAuth(data?.session);
+
+  sb.auth.onAuthStateChange((_event, session) => {
+    renderAuth(session);
+  });
+})();
+
 
