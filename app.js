@@ -11,6 +11,59 @@ const sb = window.supabase.createClient(
   window.SUPABASE_ANON_KEY
 );
 
+// =========================
+// Supabase Auth (fixed, single client)
+// =========================
+const authGuest = document.getElementById("authGuest");
+const authUser  = document.getElementById("authUser");
+const authEmail = document.getElementById("authEmail");
+const authPass  = document.getElementById("authPass");
+
+function renderAuth(session){
+  if (!authGuest && !authUser) return;
+  const user = session?.user;
+  if (user){
+    if (authGuest) authGuest.style.display = "none";
+    if (authUser)  authUser.style.display  = "flex";
+    const emailSpan = document.getElementById("authEmailSpan");
+    if (emailSpan) emailSpan.textContent = user.email || "(no email)";
+  } else {
+    if (authGuest) authGuest.style.display = "flex";
+    if (authUser)  authUser.style.display  = "none";
+  }
+}
+
+window.signup = async function(){
+  if (!sb) return alert("Supabase client not ready.");
+  try{
+    const email = (authEmail?.value || "").trim();
+    const password = authPass?.value || "";
+    const { error } = await sb.auth.signUp({ email, password });
+    if (error) throw error;
+    alert("Sign up ok! Check email to verify (if required).");
+  }catch(e){
+    alert("Sign up failed: " + (e?.message || e));
+  }
+};
+
+window.login = async function(){
+  if (!sb) return alert("Supabase client not ready.");
+  try{
+    const email = (authEmail?.value || "").trim();
+    const password = authPass?.value || "";
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+  }catch(e){
+    alert("Login failed: " + (e?.message || e));
+  }
+};
+
+window.logout = async function(){
+  if (!sb) return;
+  await sb.auth.signOut();
+};
+
+
 const STORAGE_KEY = "gmat_vocab_progress_v3";
 const SETTINGS_KEY = "gmat_vocab_settings_v3";
 const DAILY_KEY = "gmat_vocab_daily_v3";
@@ -1047,86 +1100,3 @@ if (packSelect) {
     setVocabPack(e.target.value);
   });
 }
-// =========================
-// Supabase Auth (FIXED)
-// =========================
-const sb = window.supabase?.createClient?.(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
-
-const authGuest = document.getElementById("authGuest");
-const authUser  = document.getElementById("authUser");
-const authUserEmail = document.getElementById("authUserEmail");
-const syncStatus = document.getElementById("syncStatus");
-const authEmail = document.getElementById("authEmail");
-const authPass  = document.getElementById("authPass");
-
-function renderAuth(session) {
-  const user = session?.user;
-
-  if (!authGuest || !authUser) return;
-
-  if (!user) {
-    authGuest.classList.remove("hidden");
-    authUser.classList.add("hidden");
-    if (syncStatus) syncStatus.innerText = "☁️ Local only";
-    return;
-  }
-
-  authGuest.classList.add("hidden");
-  authUser.classList.remove("hidden");
-  if (authUserEmail) authUserEmail.innerText = `👤 ${user.email}`;
-  if (syncStatus) syncStatus.innerText = "☁️ Saved";
-}
-
-// expose to onclick="" in HTML
-window.signup = async function signup() {
-  if (!sb) return alert("Supabase client not initialized.");
-
-  const email = authEmail?.value?.trim();
-  const password = authPass?.value;
-
-  if (!email || !password) return alert("Enter email + password.");
-
-  const { error } = await sb.auth.signUp({ email, password });
-  if (error) return alert(error.message);
-
-  alert("Signed up. Check your email to confirm (if required), then login.");
-};
-
-window.login = async function login() {
-  if (!sb) return alert("Supabase client not initialized.");
-
-  const email = authEmail?.value?.trim();
-  const password = authPass?.value;
-
-  if (!email || !password) return alert("Enter email + password.");
-
-  const { error } = await sb.auth.signInWithPassword({ email, password });
-  if (error) return alert(error.message);
-};
-
-window.logout = async function logout() {
-  if (!sb) return alert("Supabase client not initialized.");
-
-  const { error } = await sb.auth.signOut();
-  if (error) return alert(error.message);
-
-  // UI will also update via onAuthStateChange, but this makes it instant:
-  renderAuth(null);
-};
-
-// initial + listener
-(async () => {
-  if (!sb) {
-    console.warn("Supabase client not initialized. Check SUPABASE_URL / ANON_KEY.");
-    return;
-  }
-
-  const { data } = await sb.auth.getSession();
-  renderAuth(data?.session);
-
-  sb.auth.onAuthStateChange((_event, session) => {
-    renderAuth(session);
-  });
-})();
-
-
